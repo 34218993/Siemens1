@@ -28,13 +28,23 @@ export default function App() {
   function HomeScreen() {
     return (
       <View style={styles.view}>
-        <TextInput
-          placeholder="Search Giphy"
-          placeholderTextColor="#fff"
-          style={styles.textInput}
-          value={term}
-          onChangeText={text => onEdit(text)}
-        />
+        <View style={styles.searchRow}>
+          <TextInput
+            placeholder="Search Giphy"
+            placeholderTextColor="#fff"
+            style={styles.textInput}
+            value={term}
+            onChangeText={text => onEdit(text)}
+          />
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => {
+              fetchGifs();
+            }}>
+            <Ionicons name={'search-sharp'} size={20} color={'white'} />
+          </TouchableOpacity>
+        </View>
+
         <FlatList
           data={gifs}
           renderItem={({item}) => (
@@ -103,7 +113,6 @@ export default function App() {
 
   async function onEdit(newTerm) {
     updateTerm(newTerm);
-    fetchGifs();
   }
 
   return (
@@ -114,14 +123,13 @@ export default function App() {
             let iconName;
 
             if (route.name === 'Home') {
+              iconName = focused ? 'home-sharp' : 'home-outline';
+            } else if (route.name === 'Favourite') {
               iconName = focused
-                ? 'ios-information-circle'
-                : 'ios-information-circle-outline';
-            } else if (route.name === 'Settings') {
-              iconName = focused ? 'ios-list-box' : 'ios-list';
+                ? 'heart-circle-sharp'
+                : 'heart-circle-outline';
             }
 
-            // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
         })}
@@ -130,7 +138,7 @@ export default function App() {
           inactiveTintColor: 'gray',
         }}>
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Settings" component={favScreen} />
+        <Tab.Screen name="Favourite" component={favScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
@@ -153,5 +161,12 @@ const styles = StyleSheet.create({
     height: 150,
     borderWidth: 3,
     marginBottom: 5,
+  },
+  icon: {
+    marginLeft: 5,
+    marginTop: 13,
+  },
+  searchRow: {
+    flexDirection: 'row',
   },
 });
